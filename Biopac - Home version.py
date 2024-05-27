@@ -439,8 +439,8 @@ def main():
         init_com()
 
     # Si no existe la carpeta data se crea
-    #if not os.path.exists('data/'):
-    #    os.makedirs('data/')
+    if not os.path.exists('data/'):
+        os.makedirs('data/')
 
     bfile = open('list.csv', 'w')
     bfile.write("%s,%s,%s,%s,%s,%s,%s,%s\n" % ("First List", " ", "Second List", " ", "Third List", " ", "Fourth List", " "))
