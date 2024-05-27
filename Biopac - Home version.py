@@ -459,8 +459,7 @@ def main():
         ))
     bfile.close()
     
-    # Username = id_condition_geometry_hand correo_type(?)
-    # conditions = Mindful, Inmerse
+    # Username = correo_type(?)
     uid = input("Ingrese el ID del participante y presione ENTER para iniciar: ")
 
     while( len(uid.split("_")) != 2 or (uid.split("_")[1].upper() != 'HA' and uid.split("_")[1].upper() != 'LA') ):
