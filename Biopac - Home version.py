@@ -90,6 +90,7 @@ def init_com(address = "COM3", baudrate= 115200):
         ser.baudrate = baudrate
         ser.open()
         print('Serial port opened')
+        ser.close()
     except:
         pass
         print('The serial port couldn\'t be opened')
