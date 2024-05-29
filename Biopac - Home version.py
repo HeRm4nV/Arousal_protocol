@@ -31,6 +31,7 @@ animals_id_list = ["1111", "1201", "1205", "1300", "1313", "1450", "1525", "1602
 start_trigger = 300
 new_image_trigger = 100 # +50 if is an animal image (+20 if is an HA image, +0 if not)
 start_block_trigger = 200 # +20 for each block
+space_trigger = 50
 
 base_size = (1024, 768)
 
@@ -409,6 +410,7 @@ def show_images(image_list, dfile, subj_name, subj_type, block_number):
 
             elif event.type == KEYDOWN and event.key == K_SPACE:
                 rt = pygame.time.get_ticks() - tw
+                send_trigger(space_trigger)
 
             elif event.type == image_change:
                 
