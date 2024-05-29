@@ -10,7 +10,7 @@ from os.path import isfile, join
 from random import shuffle, getrandbits
 from time import gmtime, strftime
 
-testing = True
+testing = False
 
 ## Configurations:
 FullScreenShow = True # Pantalla completa automáticamente al iniciar el experimento
@@ -415,7 +415,7 @@ def show_images(image_list, dfile, subj_name, subj_type, block_number):
 
             elif event.type == image_change:        
                 print(pygame.time.get_ticks() - tw)
-                
+
                 show_image(image_list[count], base_size)
                 # Exposure image trigger +50 if is an animal image (+20 if is an HA image, +0 if not)
                 send_trigger(new_image_trigger + (50 if image_list[count].split('\\')[-1][:-4] in animals_id_list else 0) + (20 if image_list[count].split('\\')[-2] == 'HApos' else 0))
