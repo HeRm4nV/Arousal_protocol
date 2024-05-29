@@ -412,17 +412,15 @@ def show_images(image_list, dfile, subj_name, subj_type, block_number):
             elif event.type == image_change:
                 
                 print(pygame.time.get_ticks() - tw)
-
                 show_image(image_list[count], base_size)
+                send_trigger(new_image_trigger) # Exposure image trigger
+
+                dfile.write("%s,%s,%s,%s,%s,%s,%s,%s\n" % (subj_name.lower(), subj_type.upper(), block_number, image_list[count].split('\\')[-2], image_list[count].split('\\')[-1][:-4], (rt != 0), rt, (image_list[count].split('\\')[-1][:-4] in animals_id_list)==(rt != 0)))
 
                 # reset variables to default
                 tw = pygame.time.get_ticks()
                 rt = 0
                 count += 1
-
-                send_trigger(new_image_trigger) # Exposure image trigger
-
-                dfile.write("%s,%s,%s,%s,%s,%s,%s,%s\n" % (subj_name.lower(), subj_type.upper(), block_number, image_list[count].split('\\')[-2], image_list[count].split('\\')[-1][:-4], (rt != 0), rt, (image_list[count].split('\\')[-1][:-4] in animals_id_list)==(rt != 0)))
 
                 if count >= 50:
                     done = True
