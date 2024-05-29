@@ -25,7 +25,7 @@ LAneg_images_list = ["media\\images\\LAneg\\" + f for f in os.listdir("media\\im
 LApos_images_list = ["media\\images\\LApos\\" + f for f in os.listdir("media\\images\\LApos") if isfile(join("media\\images\\LApos", f))]
 
 
-animals_id_list = [1111, 1201, 1205, 1300, 1313, 1450, 1525, 1602, 1603, 1604, 1605, 1610, 1630, 1661, 1670, 1910, 2688, 8620, 9561]
+animals_id_list = ["1111", "1201", "1205", "1300", "1313", "1450", "1525", "1602", "1603", "1604", "1605", "1610", "1630", "1661", "1670", "1910", "2688", "8620", "9561"]
 
 # triggers
 start_trigger = 300
