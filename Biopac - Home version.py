@@ -30,7 +30,7 @@ animals_id_list = ["1111", "1201", "1205", "1300", "1313", "1450", "1525", "1602
 # triggers
 start_trigger = 300
 new_image_trigger = 100 # +50 if is an animal image (+20 if is an HA image, +0 if not)
-start_block_trigger = 200 # +20 for each block
+start_block_trigger = 200 # +20 if block is HA, + 0 if not, + 40 if is second block + 0 if not
 space_trigger = 50
 
 base_size = (1024, 768)
@@ -397,7 +397,8 @@ def show_images(image_list, dfile, subj_name, subj_type, block_number):
     rt = 0
 
     show_image(image_list[count], base_size)
-    send_trigger(start_block_trigger + block_number - 1 *20) # start block trigger 1 to 4
+    # start block trigger 1 to 4 +20 if block is HA, + 0 if not, + 40 if is second block + 0 if not
+    send_trigger(start_block_trigger + (20 if image_list[count].split('\\')[-2] == 'HApos' else 0) + (40 if block_number >= 3 else 0)) # start block trigger 1 to 4
     count += 1
 
     while not done:
@@ -412,9 +413,9 @@ def show_images(image_list, dfile, subj_name, subj_type, block_number):
                 rt = pygame.time.get_ticks() - tw
                 send_trigger(space_trigger)
 
-            elif event.type == image_change:
-                
+            elif event.type == image_change:        
                 print(pygame.time.get_ticks() - tw)
+                
                 show_image(image_list[count], base_size)
                 # Exposure image trigger +50 if is an animal image (+20 if is an HA image, +0 if not)
                 send_trigger(new_image_trigger + (50 if image_list[count].split('\\')[-1][:-4] in animals_id_list else 0) + (20 if image_list[count].split('\\')[-2] == 'HApos' else 0))
