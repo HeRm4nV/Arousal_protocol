@@ -35,6 +35,13 @@ space_trigger = 50
 
 base_size = (1024, 768)
 
+if os.name == 'posix':
+    try:
+        os.system("sudo chmod o+rw /dev/ttyUSB0")
+        print("serial ttyUSB0 port writable")
+    except:
+        print("failed to make the serial ttyUSB0 port writable!")
+
 ## Onscreen instructions
 def select_slide(slide_name):
     
@@ -82,19 +89,30 @@ def send_trigger(latency):
         pass
         print('Failed to open the port for ' + str(latency) + ' ms')
 
-def init_com(address = "COM3", baudrate= 115200):
+def init_com(baudrate= 115200):
     """Creates and tests a serial port"""
     global ser
-    try:
-        ser = serial.Serial()
-        ser.port     = address
+    ser = serial.Serial()
+    if os.name == 'posix':
+        ser.port = "/dev/ttyUSB0" # may be called something different
+    elif os.name == 'nt':
+        ser.port = "COM3" # may be called something different
         ser.baudrate = baudrate
-        ser.open()
-        print('Serial port opened')
-        ser.close()
-    except:
-        pass
-        print('The serial port couldn\'t be opened')
+        try:
+            ser.open()
+            print('Serial port opened in COM4')
+            ser.close()
+            print("COM4")
+        except:
+            try:
+                ser.port = "COM4"
+                ser.open()
+                print('Serial port opened in COM3')
+                ser.close()
+                print("COM3")
+            except:
+                pass
+                print('The serial port couldn\'t be opened')
 
 ## Text Functions
 def setfonts():
