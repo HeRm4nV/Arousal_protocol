@@ -18,12 +18,23 @@ keys = [pygame.K_SPACE] # Teclas elegidas para mano derecha o izquierda
 test_name = "AAT"
 date_name = strftime("%Y-%m-%d_%H-%M-%S", gmtime())
 
-## Image Loading
-HAneg_images_list = ["media\\images\\HAneg\\" + f for f in os.listdir("media\\images\\HAneg") if isfile(join("media\\images\\HAneg", f))]
-HApos_images_list = ["media\\images\\HApos\\" + f for f in os.listdir("media\\images\\HApos") if isfile(join("media\\images\\HApos", f))]
-LAneg_images_list = ["media\\images\\LAneg\\" + f for f in os.listdir("media\\images\\LAneg") if isfile(join("media\\images\\LAneg", f))]
-LApos_images_list = ["media\\images\\LApos\\" + f for f in os.listdir("media\\images\\LApos") if isfile(join("media\\images\\LApos", f))]
+if os.name == 'posix':
+    try:
+        os.system("sudo chmod o+rw /dev/ttyUSB0")
+        print("serial ttyUSB0 port writable")
+    except:
+        print("failed to make the serial ttyUSB0 port writable!")
+    directory_separator = "/"
+elif os.name == 'nt':
+    directory_separator = "\\"
+else:
+    print("OS not supported")
 
+## Image Loading
+HAneg_images_list = [join('media', 'images', 'HAneg', f) for f in os.listdir(join('media', 'images', 'HAneg')) if isfile(join('media', 'images', 'HAneg',f))]
+HApos_images_list = [join('media', 'images', 'HAneg', f) for f in os.listdir(join('media', 'images', 'HAneg')) if isfile(join('media', 'images', 'HAneg',f))]
+LAneg_images_list = [join('media', 'images', 'HAneg', f) for f in os.listdir(join('media', 'images', 'HAneg')) if isfile(join('media', 'images', 'HAneg',f))]
+LApos_images_list = [join('media', 'images', 'HAneg', f) for f in os.listdir(join('media', 'images', 'HAneg')) if isfile(join('media', 'images', 'HAneg',f))]
 
 animals_id_list = ["1111", "1201", "1205", "1300", "1313", "1450", "1525", "1602", "1603", "1604", "1605", "1610", "1630", "1661", "1670", "1910", "2688", "8620", "9561"]
 
@@ -34,13 +45,6 @@ start_block_trigger = 200 # +20 if block is HA, + 0 if not, + 40 if is second bl
 space_trigger = 50
 
 base_size = (1024, 768)
-
-if os.name == 'posix':
-    try:
-        os.system("sudo chmod o+rw /dev/ttyUSB0")
-        print("serial ttyUSB0 port writable")
-    except:
-        print("failed to make the serial ttyUSB0 port writable!")
 
 ## Onscreen instructions
 def select_slide(slide_name):
@@ -416,7 +420,7 @@ def show_images(image_list, dfile, subj_name, subj_type, block_number):
 
     show_image(image_list[count], base_size)
     # start block trigger 1 to 4 +20 if block is HA, + 0 if not, + 40 if is second block + 0 if not
-    send_trigger(start_block_trigger + (20 if image_list[count].split('\\')[-2] == 'HApos' else 0) + (40 if block_number >= 3 else 0)) # start block trigger 1 to 4
+    send_trigger(start_block_trigger + (20 if image_list[count].split(directory_separator)[-2] == 'HApos' else 0) + (40 if block_number >= 3 else 0)) # start block trigger 1 to 4
     count += 1
 
     while not done:
@@ -436,9 +440,9 @@ def show_images(image_list, dfile, subj_name, subj_type, block_number):
 
                 show_image(image_list[count], base_size)
                 # Exposure image trigger +50 if is an animal image (+20 if is an HA image, +0 if not)
-                send_trigger(new_image_trigger + (50 if image_list[count].split('\\')[-1][:-4] in animals_id_list else 0) + (20 if image_list[count].split('\\')[-2] == 'HApos' else 0))
+                send_trigger(new_image_trigger + (50 if image_list[count].split(directory_separator)[-1][:-4] in animals_id_list else 0) + (20 if image_list[count].split(directory_separator)[-2] == 'HApos' else 0))
 
-                dfile.write("%s,%s,%s,%s,%s,%s,%s,%s\n" % (subj_name.lower(), subj_type.upper(), block_number, image_list[count].split('\\')[-2], image_list[count].split('\\')[-1][:-4], (rt != 0), rt, (image_list[count].split('\\')[-1][:-4] in animals_id_list)==(rt != 0)))
+                dfile.write("%s,%s,%s,%s,%s,%s,%s,%s\n" % (subj_name.lower(), subj_type.upper(), block_number, image_list[count].split(directory_separator)[-2], image_list[count].split(directory_separator)[-1][:-4], (rt != 0), rt, (image_list[count].split(directory_separator)[-1][:-4] in animals_id_list)==(rt != 0)))
 
                 # reset variables to default
                 tw = pygame.time.get_ticks()
@@ -469,14 +473,12 @@ def main():
 
     image_list = create_image_list()
 
-    for i in range(len(image_list[0])):    
-        #print( int(image_list[i][0].split('\\')[-1].removesuffix('.jpg')) ) # number
-        #print(image_list[i][0].split('\\')[-2]) # image_type
+    for i in range(len(image_list[0])):
         bfile.write("%s,%s,%s,%s,%s,%s,%s,%s\n" % (
-            int(image_list[0][i].split('\\')[-1][:-4]), image_list[0][i].split('\\')[-2],
-            int(image_list[1][i].split('\\')[-1][:-4]), image_list[1][i].split('\\')[-2],
-            int(image_list[2][i].split('\\')[-1][:-4]), image_list[2][i].split('\\')[-2],
-            int(image_list[3][i].split('\\')[-1][:-4]), image_list[3][i].split('\\')[-2],    
+            int(image_list[0][i].split(directory_separator)[-1][:-4]), image_list[0][i].split(directory_separator)[-2],
+            int(image_list[1][i].split(directory_separator)[-1][:-4]), image_list[1][i].split(directory_separator)[-2],
+            int(image_list[2][i].split(directory_separator)[-1][:-4]), image_list[2][i].split(directory_separator)[-2],
+            int(image_list[3][i].split(directory_separator)[-1][:-4]), image_list[3][i].split(directory_separator)[-2],    
         ))
     bfile.close()
     
