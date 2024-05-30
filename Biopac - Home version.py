@@ -104,16 +104,16 @@ def init_com(baudrate= 115200):
         ser.baudrate = baudrate
         try:
             ser.open()
-            print('Serial port opened in COM4')
+            print('Serial port opened in COM3')
             ser.close()
-            print("COM4")
+            print("COM3")
         except:
             try:
                 ser.port = "COM4"
                 ser.open()
-                print('Serial port opened in COM3')
+                print('Serial port opened in COM4')
                 ser.close()
-                print("COM3")
+                print("COM4")
             except:
                 pass
                 print('The serial port couldn\'t be opened')
@@ -490,7 +490,7 @@ def main():
     while( len(uid.split("_")) != 2 or (uid.split("_")[1].upper() != 'HA' and uid.split("_")[1].upper() != 'LA') ):
         os.system('cls')
         print("ID ingresado no cumple con las condiciones, contacte con el encargado...")
-        subj_name = input("Ingrese el ID del participante y presione ENTER para iniciar: ")
+        uid = input("Ingrese el ID del participante y presione ENTER para iniciar: ")
 
     subj_name, subj_type = uid.lower().split("_")
 
