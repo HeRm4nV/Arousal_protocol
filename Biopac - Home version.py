@@ -32,11 +32,11 @@ else:
 
 ## Image Loading
 HAneg_images_list = [join('media', 'images', 'HAneg', f) for f in os.listdir(join('media', 'images', 'HAneg')) if isfile(join('media', 'images', 'HAneg',f))]
-HApos_images_list = [join('media', 'images', 'HAneg', f) for f in os.listdir(join('media', 'images', 'HAneg')) if isfile(join('media', 'images', 'HAneg',f))]
-LAneg_images_list = [join('media', 'images', 'HAneg', f) for f in os.listdir(join('media', 'images', 'HAneg')) if isfile(join('media', 'images', 'HAneg',f))]
-LApos_images_list = [join('media', 'images', 'HAneg', f) for f in os.listdir(join('media', 'images', 'HAneg')) if isfile(join('media', 'images', 'HAneg',f))]
+HApos_images_list = [join('media', 'images', 'HApos', f) for f in os.listdir(join('media', 'images', 'HApos')) if isfile(join('media', 'images', 'HApos',f))]
+LAneg_images_list = [join('media', 'images', 'LAneg', f) for f in os.listdir(join('media', 'images', 'LAneg')) if isfile(join('media', 'images', 'LAneg',f))]
+LApos_images_list = [join('media', 'images', 'LApos', f) for f in os.listdir(join('media', 'images', 'LApos')) if isfile(join('media', 'images', 'LApos',f))]
 
-animals_id_list = ["1111", "1201", "1205", "1300", "1313", "1450", "1525", "1602", "1603", "1604", "1605", "1610", "1630", "1661", "1670", "1910", "2688", "8620", "9561"]
+animals_id_list = ["1111", "1201", "1205", "1300", "1313", "1450", "1525", "1602", "1603", "1604", "1605", "1610", "1630", "1661", "1670", "1910", "2688", "8620", "9561"] 
 
 # triggers
 start_trigger = 300
@@ -435,21 +435,23 @@ def show_images(image_list, dfile, subj_name, subj_type, block_number):
                 rt = pygame.time.get_ticks() - tw
                 send_trigger(space_trigger)
 
-            elif event.type == image_change:        
+            elif event.type == image_change:
+                # saving previous image
+                dfile.write("%s,%s,%s,%s,%s,%s,%s,%s,%s\n" % (subj_name.lower(), subj_type.upper(), block_number, (image_list[count-1].split(directory_separator)[-2])[:2], (image_list[count-1].split(directory_separator)[-2])[2:], image_list[count-1].split(directory_separator)[-1][:-4], (rt != 0), rt, (image_list[count-1].split(directory_separator)[-1][:-4] in animals_id_list)==(rt != 0)))
                 print(pygame.time.get_ticks() - tw)
+                if count < 50:
+                    print(image_list[count].split(directory_separator)[-1][:-4])
 
-                show_image(image_list[count], base_size)
-                # Exposure image trigger +50 if is an animal image (+20 if is an HA image, +0 if not)
-                send_trigger(new_image_trigger + (50 if image_list[count].split(directory_separator)[-1][:-4] in animals_id_list else 0) + (20 if image_list[count].split(directory_separator)[-2] == 'HApos' else 0))
-
-                dfile.write("%s,%s,%s,%s,%s,%s,%s,%s\n" % (subj_name.lower(), subj_type.upper(), block_number, image_list[count].split(directory_separator)[-2], image_list[count].split(directory_separator)[-1][:-4], (rt != 0), rt, (image_list[count].split(directory_separator)[-1][:-4] in animals_id_list)==(rt != 0)))
-
-                # reset variables to default
-                tw = pygame.time.get_ticks()
-                rt = 0
-                count += 1
-
-                if count >= 50:
+                    show_image(image_list[count], base_size)
+                    # Exposure image trigger +50 if is an animal image (+20 if is an HA image, +0 if not)
+                    send_trigger(new_image_trigger + (50 if image_list[count].split(directory_separator)[-1][:-4] in animals_id_list else 0) + (20 if image_list[count].split(directory_separator)[-2] == 'HApos' else 0))
+                    
+                    # reset variables to default
+                    count += 1
+                    tw = pygame.time.get_ticks()
+                    rt = 0
+                else:
+                    print ("Cambiando de bloque")
                     done = True
 
     pygame.time.set_timer(image_change, 0)
@@ -497,7 +499,7 @@ def main():
 
     csv_name  = join('data', date_name + '_' + subj_name + '.csv')
     dfile = open(csv_name, 'w')
-    dfile.write("%s,%s,%s,%s,%s,%s,%s,%s\n" % ("Sujeto", "Tipo Sujeto", "Bloque", "TipoImagen", "IdImagen", "Respuesta", "TReaccion", "Acierto"))
+    dfile.write("%s,%s,%s,%s,%s,%s,%s,%s,%s\n" % ("Sujeto", "Tipo Sujeto", "Bloque", "Arousal", "Valence", "IdImagen", "Respuesta", "TReaccion", "Acierto"))
     dfile.flush()
 
     init()
