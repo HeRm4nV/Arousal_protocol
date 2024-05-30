@@ -40,6 +40,7 @@ animals_id_list = ["1111", "1201", "1205", "1300", "1313", "1450", "1525", "1602
 
 # triggers
 start_trigger = 300
+end_trigger = 350
 new_image_trigger = 100 # +50 if is an animal image (+20 if is an HA image, +0 if not)
 start_block_trigger = 200 # +20 if block is HA, + 0 if not, + 40 if is second block + 0 if not
 space_trigger = 50
@@ -554,6 +555,7 @@ def main():
     dfile.flush()
     
     slide(select_slide('farewell'), True , K_SPACE)
+    send_trigger(end_trigger)
     dfile.close()
     ends()
 
