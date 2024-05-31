@@ -498,7 +498,7 @@ def main():
     # Iniciador de Pygame
     pygame.init()
 
-    csv_name  = join('data', date_name + '_' + subj_name + '.csv')
+    csv_name  = join('data', date_name + '_' + uid + '.csv')
     dfile = open(csv_name, 'w')
     dfile.write("%s,%s,%s,%s,%s,%s,%s,%s,%s\n" % ("Sujeto", "Tipo Sujeto", "Bloque", "Arousal", "Valence", "IdImagen", "Respuesta", "TReaccion", "Acierto"))
     dfile.flush()
