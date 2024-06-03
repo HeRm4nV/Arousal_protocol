@@ -421,7 +421,7 @@ def show_images(image_list, dfile, subj_name, subj_type, block_number):
 
     show_image(image_list[count], base_size)
     # start block trigger 1 to 4 +20 if block is HA, + 0 if not, + 40 if is second block + 0 if not
-    send_trigger(start_block_trigger + (20 if image_list[count].split(directory_separator)[-2] == 'HApos' else 0) + (40 if block_number >= 3 else 0)) # start block trigger 1 to 4
+    send_trigger(start_block_trigger + (20 if image_list[count].split(directory_separator)[-2].startswith("HA") else 0) + (40 if block_number >= 3 else 0)) # start block trigger 1 to 4
     count += 1
 
     while not done:
