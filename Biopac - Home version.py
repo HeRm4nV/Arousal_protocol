@@ -41,7 +41,7 @@ animals_id_list = ["1111", "1201", "1205", "1300", "1313", "1450", "1525", "1602
 # triggers
 start_trigger = 300
 end_trigger = 350
-new_image_trigger = 100 # +50 if is an animal image (+20 if is an HA image, +0 if not)
+new_image_trigger = 100 # +20 if is an animal image (+50 if is an HA image, +0 if not)
 start_block_trigger = 200 # +20 if block is HA, + 0 if not, + 40 if is second block + 0 if not
 space_trigger = 50
 
@@ -441,11 +441,10 @@ def show_images(image_list, dfile, subj_name, subj_type, block_number):
                 dfile.write("%s,%s,%s,%s,%s,%s,%s,%s,%s\n" % (subj_name.lower(), subj_type.upper(), block_number, (image_list[count-1].split(directory_separator)[-2])[:2], (image_list[count-1].split(directory_separator)[-2])[2:], image_list[count-1].split(directory_separator)[-1][:-4], (rt != 0), rt, (image_list[count-1].split(directory_separator)[-1][:-4] in animals_id_list)==(rt != 0)))
                 print(pygame.time.get_ticks() - tw)
                 if count < 50:
-                    print(image_list[count].split(directory_separator)[-1][:-4])
-
                     show_image(image_list[count], base_size)
                     # Exposure image trigger +50 if is an animal image (+20 if is an HA image, +0 if not)
-                    send_trigger(new_image_trigger + (50 if image_list[count].split(directory_separator)[-1][:-4] in animals_id_list else 0) + (20 if image_list[count].split(directory_separator)[-2] == 'HApos' else 0))
+
+                    send_trigger(new_image_trigger + (20 if image_list[count].split(directory_separator)[-1][:-4] in animals_id_list else 0) + (50 if image_list[count].split(directory_separator)[-2].startswith("HA") else 0))
                     
                     # reset variables to default
                     count += 1
