@@ -509,7 +509,7 @@ def main():
     # Import song
     selected_sound = pygame.mixer.Sound('media/audio/%s.mp3' % (subj_type.upper()))
 
-    send_trigger(start_trigger)
+    send_trigger(start_trigger + (10 if subj_type.lower() == 'ha' else 0))
 
     # first 2 blocks are HA, second 2 blocks are LA
     if subj_type.lower() == 'ha':
@@ -553,7 +553,7 @@ def main():
     dfile.flush()
     
     slide(select_slide('farewell'), True , K_SPACE)
-    send_trigger(end_trigger)
+    send_trigger(end_trigger + (10 if subj_type.lower() == 'ha' else 0))
     dfile.close()
     ends()
 
