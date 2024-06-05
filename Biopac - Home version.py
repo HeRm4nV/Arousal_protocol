@@ -41,8 +41,7 @@ animals_id_list = ["1111", "1201", "1205", "1300", "1313", "1450", "1525", "1602
 # triggers
 start_trigger = 300
 end_trigger = 350
-new_image_trigger = 100 # +20 if is an animal image (+50 if is an HA image, +0 if not)
-start_block_trigger = 200 # +20 if block is HA, + 0 if not, + 40 if is second block + 0 if not
+new_image_trigger = 100 # +10 if is an animal image (+50 if valence is positive, +0 if not)
 space_trigger = 50
 
 base_size = (1024, 768)
@@ -419,9 +418,9 @@ def show_images(image_list, dfile, subj_name, subj_type, block_number):
     tw = pygame.time.get_ticks()
     rt = 0
 
-    show_image(image_list[count], base_size)
-    # start block trigger 1 to 4 +20 if block is HA, + 0 if not, + 40 if is second block + 0 if not
-    send_trigger(start_block_trigger + (20 if image_list[count].split(directory_separator)[-2].startswith("HA") else 0) + (40 if block_number >= 3 else 0)) # start block trigger 1 to 4
+    show_image(image_list[count], base_size) 
+    # first image of a block, is identify by +100
+    send_trigger(new_image_trigger + (10 if image_list[count].split(directory_separator)[-1][:-4] in animals_id_list else 0) + (50 if image_list[count].split(directory_separator)[-2].endswith("pos") else 0) + 100)
     count += 1
 
     while not done:
@@ -442,10 +441,10 @@ def show_images(image_list, dfile, subj_name, subj_type, block_number):
                 print(pygame.time.get_ticks() - tw)
                 if count < 50:
                     show_image(image_list[count], base_size)
-                    # Exposure image trigger +50 if is an animal image (+20 if is an HA image, +0 if not)
-
-                    send_trigger(new_image_trigger + (20 if image_list[count].split(directory_separator)[-1][:-4] in animals_id_list else 0) + (50 if image_list[count].split(directory_separator)[-2].startswith("HA") else 0))
                     
+                    # Exposure image trigger +50 if valence is positive (+10 image have an animal, +0 if not)
+                    send_trigger(new_image_trigger + (10 if image_list[count].split(directory_separator)[-1][:-4] in animals_id_list else 0) + (50 if image_list[count].split(directory_separator)[-2].endswith("pos") else 0))
+
                     # reset variables to default
                     count += 1
                     tw = pygame.time.get_ticks()
